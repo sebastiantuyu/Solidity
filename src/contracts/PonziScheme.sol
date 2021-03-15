@@ -7,15 +7,31 @@ contract PonziScheme {
     mapping(address => uint) public balances;
     address[] public investors;
 
+    event Deposit(
+        address indexed _from,
+        uint256 _value
+    );
+    
+    constructor(){
+        investors.push(msg.sender);
+    }
+    
+    
     receive() external payable {
-        require(msg.value > MIN_INVESTMENT, "Not minimum investment");
+
+
+    }
+
+    function deposit() payable public
+    {
+        require(msg.value >= MIN_INVESTMENT, "Not minimum investment");
 
         // Distribute the rewards between all investors
-        uint rewardForInvestor  = msg.value / investors.length;
-        for(uint i=0;i<investors.length;i++){
-            balances[investors[i]] += rewardForInvestor;
-        }
-        investors.push(msg.sender);
+            uint rewardForInvestor  = msg.value / investors.length;
+            for(uint i=0;i<investors.length;i++){
+                balances[investors[i]] += rewardForInvestor;
+            }
+            investors.push(msg.sender);
 
     }
 
@@ -30,5 +46,9 @@ contract PonziScheme {
     function balanceOf() public view returns(uint){
         return balances[msg.sender];
     }
+
+
+    
+
 
 }
