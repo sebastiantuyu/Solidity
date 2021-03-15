@@ -12,7 +12,7 @@ contract PonziScheme {
         uint256 _value
     );
     
-    constructor(){
+    constructor() public {
         investors.push(msg.sender);
     }
     
