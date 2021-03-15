@@ -1,0 +1,22 @@
+{
+  "name": "solidity",
+  "version": "1.0.0",
+  "description": "\"Testing Solidity basics\"",
+  "dependencies": {
+    "truffle": "5.1.39",
+    "web3": "1.2.11"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\"\""
+  },
+  "keywords": [
+    "\"\""
+  ],
+  "author": "Sebastian Tuyu",
+  "license": "ISC"
+}
