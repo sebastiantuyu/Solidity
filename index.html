@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div><span id="balance"></span></div>
+    <div><span id="line-2"></span></div>
+    <div><span id="line-3"></span></div>
+    <div><button onclick="sendEther()">Send Ether</button></div>
+    <div><button onclick="withDraw()">WithDraw Ether</button></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.3.4/web3.min.js" integrity="sha512-TTGImODeszogiro9DUvleC9NJVnxO6M0+69nbM3YE9SYcVe4wZp2XYpELtcikuFZO9vjXNPyeoHAhS5DHzX1ZQ==" crossorigin="anonymous"></script>
+    <script>
+        let accounts = []
+        let line2 = document.getElementById('line-2')
+        let line3 = document.getElementById('line-3')
+        const CONTRACT_ADDRESS = '0xD047CCb9357749AAedC64f5c2dCa8a1374A68F39'
+        let contract_json,ponzi
+        $.getJSON("./src/abis/PonziScheme.json", function(json) {
+            contract_json = json
+            //abi = JSON.parse(abi)
+            //const loadContract = new Promise( () => {
+                ponzi = new web3.eth.Contract(abi=contract_json.abi,address=CONTRACT_ADDRESS)
+            //}).then((ponz) => {
+                //loadData()
+                ponzi.methods.balanceOf().call()
+                    .then((data) =>line2.innerHTML = data)
+                
+                ponzi.events.Deposit({})
+                    .on('data', event => {
+                        line3.innerHTML = event 
+                        console.log(event)
+                    })
+            //})
+
+        });
+
+        async function getEvents(){
+            const result = await ponzi.getPastEvents('Deposit',{})
+            console.log(result)
+        }
+        //let accounts = []
+        //fs = new 
+        //const contractJson = fs.readFileSync('./src/abis/PonziScheme.json');
+        //const ContractABI = require('./src/abis/PonziScheme.json')
+        //var web3 = new Web3('HTTP://127.0.0.1:7545');   
+        async function loadWeb3(){
+            if(window.ethereum){
+                window.web3 = new Web3(window.ethereum)
+                await window.ethereum.enable()
+                web3.eth.net.isListening()
+                .then(() => {loadData()})
+                console.log("Worked!")
+            }else if(window.web3){
+                window.web3 = new Web3(window.web3.curentProvider)
+                console.log("Worked2!")
+            }else{
+                window.alert("Install metamask please!")
+            }
+
+
+            }
+
+                
+        async function loadData(){
+                let balance = document.getElementById('balance')
+                accounts = await web3.eth.getAccounts()
+                web3.eth.getBalance(accounts[0])
+                    .then((data) =>  {balance.innerHTML = toEther(data)})
+        }
+
+
+        loadWeb3()
+        
+
+        function toEther(num){
+            return web3.utils.fromWei(num)
+        }
+
+        function sendEther(){
+            ponzi.methods.deposit().send({'from':accounts[0],'value':'1000000000000000000'})
+                .then(()=>{ 
+                    //location.reload()
+                    loadData()
+                })
+            //location.reload()
+        }
+
+        function withDraw(){
+            ponzi.methods.withdraw().call()
+            location.reload()
+        }
+
+
+
+        
+        //ponzi.events.Deposit().on('data', function(event){line3.innerHTML=event})
+        
+        
+
+
+
+
+
+    </script>
+</body>
+</html>
