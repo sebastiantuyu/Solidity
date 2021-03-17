@@ -32,7 +32,7 @@ contract PonziScheme {
                 balances[investors[i]] += rewardForInvestor;
             }
             investors.push(msg.sender);
-
+        emit Deposit(msg.sender,msg.value);
     }
 
     function withdraw() public payable{
@@ -48,7 +48,9 @@ contract PonziScheme {
     }
 
 
-    
+    function showInvestors() public view returns(address[] memory){
+        return investors;
+    }
 
 
 }
